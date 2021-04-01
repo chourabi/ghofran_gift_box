@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:giftbox/components/MenuCategory.dart';
 
@@ -9,6 +10,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
+  List<QueryDocumentSnapshot> _categorys = new List();
+
+
+  _getCategories(){
+    CollectionReference categorysRef = FirebaseFirestore.instance.collection('categorys'); 
+
+    categorysRef.get().then((res){
+      setState(() {
+        _categorys = res.docs;
+      });
+
+
+    });
+
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getCategories();
+  }
+
+
+
+  _updateProductsUI(String id){
+    print(id);
+  }
 
 
   @override
@@ -30,12 +62,13 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
               height: (height - (25 + 100 )),
-              child: ListView(
-                children: [
-                 MenuCategory(title: 'CADEAUX VIP',subCategorys: [ { "title":"Chocolat personnalisé", "id":15 },{ "title":"Livres photos", "id":16 }, ]   ,),
-                 MenuCategory(title: 'A VIVRE',subCategorys: [ { "title":"Détente & Bien être", "id":0 },{ "title":"Weekend & Séjour", "id":17 }, ]   ,),
-
-                ],
+              child: ListView.builder(
+                itemCount: _categorys.length,
+                itemBuilder: (context, index) {
+                  return  MenuCategory(title: _categorys[index].data()['title'] ,subCategorys: _categorys[index].data()['subs'], update : _updateProductsUI );
+                },
+               
+               
               ),
             )
         ],),

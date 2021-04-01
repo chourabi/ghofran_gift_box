@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "58703052391",
+    "project_id": "giftbox-a5a62",
+    "storage_bucket": "giftbox-a5a62.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58703052391:android:aa37c36b6faa713aecdec2",
+        "android_client_info": {
+          "package_name": "com.example.giftbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58703052391-3k0ffv5i58m0e8i9cd04k0thkh7o9his.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5jiIEr-d3J3KSCdycsUVUB0rMfm8qJYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58703052391-3k0ffv5i58m0e8i9cd04k0thkh7o9his.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

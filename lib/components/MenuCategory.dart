@@ -25,8 +25,9 @@ import 'package:flutter/material.dart';
 class MenuCategory extends StatefulWidget {
   final String title;
   final dynamic subCategorys;
+  final dynamic update;
   
-  const MenuCategory({Key key, this.title, this.subCategorys}) : super(key: key);
+  const MenuCategory({Key key, this.title, this.subCategorys, this.update}) : super(key: key);
 
   @override
   _MenuCategoryState createState() => _MenuCategoryState();
@@ -39,10 +40,14 @@ class _MenuCategoryState extends State<MenuCategory> with SingleTickerProviderSt
 
   AnimationController _animationController;
 
+  Function update;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    update = widget.update;
 
     subCategorys = widget.subCategorys;
 
@@ -50,6 +55,8 @@ class _MenuCategoryState extends State<MenuCategory> with SingleTickerProviderSt
       AnimationController(vsync: this, duration: Duration(milliseconds: 450));
 
     _animationController.forward();
+
+    
       
   }
 
@@ -63,7 +70,11 @@ class _MenuCategoryState extends State<MenuCategory> with SingleTickerProviderSt
           Divider(
                     thickness: 1,
                   ),
-                  ListTile(title: Text(subCategorys[i]['title'],style: TextStyle( color: Colors.grey.shade500 , fontSize: 20 ),),)
+                  ListTile(title: Text(subCategorys[i]['title'],style: TextStyle( color: Colors.grey.shade500 , fontSize: 20 ),),
+                  
+                  onTap: (){
+                    update(subCategorys[i]['id']);
+                  },)
                   
         ],),
       );
