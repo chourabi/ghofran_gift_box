@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:giftbox/components/MenuCategory.dart';
+import 'package:giftbox/pages/AcceuilPage.dart';
+import 'package:giftbox/pages/CartPage.dart';
+import 'package:giftbox/pages/FavorisPage.dart';
+import 'package:giftbox/pages/ProduitCategory.dart';
+import 'package:giftbox/pages/SearchPage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -13,6 +18,13 @@ class _HomePageState extends State<HomePage> {
 
 
   List<QueryDocumentSnapshot> _categorys = new List();
+
+
+  List<Widget> _tabs = new List();
+  
+  
+  bool _isLoading = false;
+  int _bottomNavigationIndex = 0;
 
 
   _getCategories(){
@@ -29,26 +41,82 @@ class _HomePageState extends State<HomePage> {
   }
 
 
+
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _getCategories();
+
+
+
+    _tabs.add(AcceuilPage());
+    _tabs.add(SearchPage());
+    _tabs.add(FavorisPage());
+    _tabs.add(CartPage());
+    
+    
+    
   }
 
 
 
   _updateProductsUI(String id){
     print(id);
+    Navigator.pop(context);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProduitCategory(id:id)),
+    );
   }
+
+
 
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
 
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index){
+          setState(() {
+            _bottomNavigationIndex = index;
+          });
+        },
+        selectedItemColor: Colors.red.shade400,
+        currentIndex: _bottomNavigationIndex,
+        items: [
+          BottomNavigationBarItem(
+            
+          icon: Icon(Icons.home, color: Colors.black,),
+          title: Text("Acceuil")
+          ),
+          BottomNavigationBarItem(
+          icon: Icon(Icons.search, color: Colors.black,),
+          title: Text("Recherch")
+          ),
+          BottomNavigationBarItem(
+          icon: Icon(Icons.favorite, color: Colors.black,),
+          title: Text("Favoris")
+          ),
+          BottomNavigationBarItem(
+          icon: Icon(Icons.shopping_cart, color: Colors.black,),
+          title: Text("Panier")
+          ),
+          BottomNavigationBarItem(
+          icon: Icon(Icons.person, color: Colors.black,),
+          title: Text("Profile")
+          ),
+          
+          
+          
+      ],),
       drawer: Drawer(
         child: Container(
           child: Column(children: [
@@ -75,17 +143,26 @@ class _HomePageState extends State<HomePage> {
         )
       ),
       
-      body: Center(
+      body: _isLoading ? 
+      Center(
         child: Column(
 
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            
+            Container(
+              width: width,
+              child: Image.asset('assets/logo.png'),
+            )
             
           ],
         ),
-      ),
-     
+      ):
+
+
+      
+
+
+      _tabs.elementAt(_bottomNavigationIndex)
     );
   }
 }
