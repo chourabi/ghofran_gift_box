@@ -13,7 +13,9 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
 
     List<QueryDocumentSnapshot> _favsDocs = new List();
+    double _total = 0;
 
+    List<dynamic> _produitTotalToBuy = new List();
 
 
   _getFavorisProducts(){
@@ -32,11 +34,45 @@ class _CartPageState extends State<CartPage> {
   }
 
 
+  
+  _getTotalPrix(){
+    
+        FirebaseAuth auth = FirebaseAuth.instance;
+
+          CollectionReference favorissRef = FirebaseFirestore.instance.collection('panier'); 
+            favorissRef.where('idClient', isEqualTo: auth.currentUser.uid).get().then((res) {
+              
+              List<QueryDocumentSnapshot> tmp  = res.docs;
+
+              
+              for (var i = 0; i < tmp.length; i++) {
+                var count = tmp[i].data()['count'];
+                print( "hello test ${tmp[0].data()} "  );
+                
+                FirebaseFirestore.instance.collection('produit').doc(tmp[i].data()['idProd']).get().then((res){
+                  
+                  setState(() {
+                    _total = _total + ( count * ( double.parse(res.data()['prix']) ) );
+                  });
+                });
+                 
+              }
+                
+              
+
+              
+            
+        });
+
+  }
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _getFavorisProducts();
+    _getTotalPrix();
   }
 
 
@@ -49,7 +85,29 @@ class _CartPageState extends State<CartPage> {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text('Total : $_total TND', style: TextStyle(color: Colors.black),),
+        iconTheme: IconThemeData(color: Colors.black),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: (){
+              FirebaseAuth auth = FirebaseAuth.instance;
 
+              CollectionReference cmd = FirebaseFirestore.instance.collection('commandes'); 
+                  cmd.add({
+                    "idClient":auth.currentUser.uid,
+                    "produits":_produitTotalToBuy
+                  }) .then((res) {
+                    
+              });
+             
+
+            },
+          )
+        ],
+      ),
       body: Container(
         child: ListView.builder( itemCount: _favsDocs.length, itemBuilder: (context, index) {
 
@@ -66,8 +124,13 @@ class _CartPageState extends State<CartPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> _produit = snapshot.data.data();
 
-
-              print('${snapshot.data.exists} hello');
+              _produitTotalToBuy.add({
+                "details":{
+                  "id":snapshot.data.id,
+                  "details":_produit,
+                  "count": _favsDocs[index].data()['count']
+                }
+              });
 
 
               String id =  snapshot.data.id;
@@ -133,7 +196,7 @@ class _CartPageState extends State<CartPage> {
         );
         
         }, ),
-      ),
+      )
     );
   }
 }

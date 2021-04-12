@@ -2,10 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:giftbox/components/MenuCategory.dart';
 import 'package:giftbox/pages/AcceuilPage.dart';
+import 'package:giftbox/pages/AdminDashboard.dart';
 import 'package:giftbox/pages/CartPage.dart';
 import 'package:giftbox/pages/FavorisPage.dart';
 import 'package:giftbox/pages/ProduitCategory.dart';
 import 'package:giftbox/pages/SearchPage.dart';
+import 'package:giftbox/pages/SignInPage.dart';
+import 'package:giftbox/pages/profilePage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -56,6 +59,8 @@ class _HomePageState extends State<HomePage> {
     _tabs.add(SearchPage());
     _tabs.add(FavorisPage());
     _tabs.add(CartPage());
+    _tabs.add(ProfilePage());
+    
     
     
     
@@ -118,7 +123,8 @@ class _HomePageState extends State<HomePage> {
           
       ],),
       drawer: Drawer(
-        child: Container(
+        child: SingleChildScrollView(
+          child: Container(
           child: Column(children: [
             Container(
               padding: EdgeInsets.only(top:25),
@@ -126,6 +132,17 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.all(15),
                 height: 100,
                 child: Image.asset('assets/logo.png'),
+              ),
+            ),
+            Container(
+              child: ListTile(
+                onTap: (){
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AdminDashbard()),
+                        );
+                },
+                title: Text("Administration"),
               ),
             ),
             Container(
@@ -140,6 +157,7 @@ class _HomePageState extends State<HomePage> {
               ),
             )
         ],),
+        ),
         )
       ),
       

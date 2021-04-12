@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:giftbox/pages/AdminDashboard.dart';
 import 'package:giftbox/pages/HomePage.dart';
 
 class SignInPage extends StatefulWidget {
@@ -37,11 +38,22 @@ TextEditingController _passwordControl = new TextEditingController();
 
       print(response);
 
+      if ( response.user.uid == "Fk1NDlItlANtyIvzZDmsieAw69f1" ) {
+        // redirect to admin dashboard 
+        
           Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => AdminDashbard()),
+                    );
+
+      } else {
+         Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomePage()),
           );
       
+      }
+         
     }).catchError((e){
 
 
